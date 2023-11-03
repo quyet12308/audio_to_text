@@ -1,0 +1,15 @@
+security_info.py
+kenlm
+__pycache__
+audio_test
+asr_vietnamese
+audio_cover_16khz
+database
+segment_audio
+test_wav
+img
+models
+
+
+# file 
+download_audio.py

@@ -1,0 +1,13 @@
+__pycache__
+asr_vietnamese
+audio_cover_16khz
+audio_test
+database
+download_audio
+kenlm
+models
+segment_audio
+test_wav
+data_test.txt
+note_project.txt
+audio_arr.txt

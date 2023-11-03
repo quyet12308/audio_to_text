@@ -1,0 +1,1 @@
+2/10/2023 đã cố làm phần audio sang text ( trực tiếp từ âm thanh ko qua tệp nhưng không chuyển nổi ) tạm thời để nó ở đấy đã làm phần khác đã ( gắn lm vào )
