@@ -7,7 +7,7 @@ from test7 import get_data_and_process_via_url
 def send_message(message,quese_name):
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
-            host=urls["url_rabbitmq"],
+            host=urls["url_rabbitmq2"],
             port=rabbit_mq_infor["port"],
             virtual_host=rabbit_mq_infor["virtual_host"],
             credentials=pika.PlainCredentials(
@@ -32,7 +32,7 @@ def listen_rabbitmq(queue_name):
     # Kết nối tới RabbitMQ
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
-            host=urls["url_rabbitmq"],
+            host=urls["url_rabbitmq2"],
             port=rabbit_mq_infor["port"],
             virtual_host=rabbit_mq_infor["virtual_host"],
             credentials=pika.PlainCredentials(
