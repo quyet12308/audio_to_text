@@ -1,7 +1,8 @@
 import pika
 import json
 from security_info import rabbit_mq_infor,urls
-from test6 import play_audio_from_url
+# from test6 import play_audio_from_url
+from test_ctc_wav2vec2 import play_audio_from_url
 from test7 import get_data_and_process_via_url
 
 def send_message(message,quese_name):
@@ -57,7 +58,7 @@ def listen_rabbitmq(queue_name):
         data4 = {
             "tenant_code": new_dict_data["tenant_code"],
             "callid":new_dict_data["callid"],
-            "text": data3["text1"],
+            "text": data3["text2"],
             "sentiment_analysis": data3["sentiment_analysis"]
         }
         json_data4 = json.dumps(data4,ensure_ascii=False)
