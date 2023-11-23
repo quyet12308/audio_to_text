@@ -5,7 +5,7 @@ audio_test
 database
 download_audio
 kenlm
-models
+
 segment_audio
 test_wav
 data_test.txt
