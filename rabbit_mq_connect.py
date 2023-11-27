@@ -4,6 +4,7 @@ from security_info import rabbit_mq_infor,urls
 # from test6 import play_audio_from_url
 from test_ctc_wav2vec2 import play_audio_from_url
 from test7 import get_data_and_process_via_url
+from write_error_log import write_to_file
 
 def send_message(message,quese_name):
     connection = pika.BlockingConnection(
@@ -85,6 +86,10 @@ while flag:
         listen_rabbitmq(queue_name=rabbit_mq_infor['quese_get_data'])
     except Exception as e:
         # Xử lý ngoại lệ (lỗi)
-        print(f"Lỗi xử lý URL : {str(e)}")
+        # print(f"Lỗi xử lý URL : {str(e)}")
+        write_to_file(
+            error=f"{str(e)}",
+            filename="error.txt"
+        )
         # Bỏ qua URL lỗi và tiếp tục vòng lặp
         continue

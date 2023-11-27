@@ -86,7 +86,7 @@ def play_audio_from_url(url,start_num_samples,end_num_samples):
         # transcription = processor.batch_decode(predicted_ids)
         transcription = processor.decode(predicted_ids)
         beam_search_output = ngram_lm_model.decode(logits.cpu().detach().numpy(), beam_width=500)
-        print(transcription)
+        # print(transcription)
         # print(type(transcription))
         print(beam_search_output)
         # print(type(beam_search_output))
@@ -114,8 +114,8 @@ def get_decoder_ngram_model(tokenizer, ngram_lm_path):
     vocab_list[tokenizer.word_delimiter_token_id] = " "
     # specify ctc blank char index, since conventially it is the last entry of the logit matrix
     alphabet = Alphabet.build_alphabet(vocab_list, ctc_token_idx=tokenizer.pad_token_id)
-    print(alphabet)
-    print(type(alphabet))
+    # print(alphabet)
+    # print(type(alphabet))
     lm_model = kenlm.Model(ngram_lm_path)
     decoder = BeamSearchDecoderCTC(alphabet,
                                    language_model=LanguageModel(lm_model))

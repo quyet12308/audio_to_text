@@ -18,7 +18,7 @@ pip install -r requirements.txt
 ```
 - Chạy dự án bằng lệnh:
 ```cmd
-python app1.py
+python rabbit_mq_connect.py
 ```
 
 ## Các bước chính của dự án 
