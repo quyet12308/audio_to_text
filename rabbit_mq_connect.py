@@ -4,6 +4,7 @@ from security_info import rabbit_mq_infor,urls
 # from test6 import play_audio_from_url
 from test_ctc_wav2vec2 import play_audio_from_url
 from test7 import get_data_and_process_via_url
+from get_time import *
 
 def send_message(message,quese_name):
     connection = pika.BlockingConnection(
@@ -29,6 +30,26 @@ def send_message(message,quese_name):
     connection.close()
     return {"mesage":'Message sent successfully'}
 
+def send_mes_log(url_audio, processing_time, quese_name, message):
+    log_mes = {
+        "time": gettime2(),
+        "message": message,
+        "url_audio": url_audio,
+        # "processing_time":f"{time_difference(start_time=t1,end_time=t2,unit='ms')} ms"
+        "processing_time": processing_time,
+    }
+    log_mes_json = json.dumps(log_mes, ensure_ascii=False)
+    send_message(message=log_mes_json, quese_name=quese_name)
+
+def send_error_log( quese_name, error):
+    log_mes = {
+        "time": gettime2(),
+        "error": str(error)
+    }
+    log_mes_json = json.dumps(log_mes, ensure_ascii=False)
+    send_message(message=log_mes_json, quese_name=quese_name)
+
+
 def listen_rabbitmq(queue_name):
     # Kết nối tới RabbitMQ
     connection = pika.BlockingConnection(
@@ -49,11 +70,19 @@ def listen_rabbitmq(queue_name):
 
     # Hàm callback được gọi khi nhận được tin nhắn
     def callback(ch, method, properties, body):
+        t1 = gettime3()
         request_data = body.decode()
         print("Received message:", request_data)
         print(type(request_data))
         request_data = json.loads(request_data)
         new_dict_data = get_data_and_process_via_url(dict_data=request_data)
+        t2 = gettime3()
+        send_mes_log(
+            message=request_data,
+            processing_time=time_difference(start_time=t1,end_time=t2,unit="ms"),
+            quese_name=rabbit_mq_infor["quese_log_requirements"],
+            url_audio=new_dict_data["recording_file"]
+        )
         data3 = play_audio_from_url(url=new_dict_data["recording_file"],start_num_samples=2000,end_num_samples=6000)
         data4 = {
             "tenant_code": new_dict_data["tenant_code"],
@@ -64,6 +93,13 @@ def listen_rabbitmq(queue_name):
         json_data4 = json.dumps(data4,ensure_ascii=False)
         print(json_data4)
         send_message(message=json_data4,quese_name=rabbit_mq_infor["quese_push_data"])
+        t2 = gettime3()
+        send_mes_log(
+            message=json_data4,
+            processing_time=time_difference(start_time=t1,end_time=t2,unit="ms"),
+            quese_name=rabbit_mq_infor["quese_log_results"],
+            url_audio=new_dict_data["recording_file"]
+        )
 
 
     # Bắt đầu lắng nghe trên hàng đợi
@@ -85,6 +121,10 @@ while flag:
         listen_rabbitmq(queue_name=rabbit_mq_infor['quese_get_data'])
     except Exception as e:
         # Xử lý ngoại lệ (lỗi)
-        print(f"Lỗi xử lý URL : {str(e)}")
+        print(f"Lỗi xử lý : {str(e)}")
+        send_error_log(
+            error=e,
+            quese_name=rabbit_mq_infor["quese_log_error"]
+        )
         # Bỏ qua URL lỗi và tiếp tục vòng lặp
         continue
